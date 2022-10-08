@@ -1,44 +1,44 @@
 package com.example.hellospring;
 
-import com.example.hellospring.domain.Member;
-import com.example.hellospring.repository.JpaMemberRepository;
-import com.example.hellospring.repository.MemberRepository;
-import com.example.hellospring.repository.MemoryMemberRepository;
+
+import com.example.hellospring.repository.*;
 import com.example.hellospring.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.persistence.EntityManager;
+import javax.sql.DataSource;
 
 
 @Configuration
 public class SpringConfig {
 
-     private EntityManager em;
+    private final MemberRepository memberRepository;
 
-     @Autowired
-    public SpringConfig(EntityManager em) {
-         this.em = em;
-     }
+    @Autowired
+    public SpringConfig(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
+    }
 
-     @Bean
-    public MemberService memberService() {
-         return new MemberService(memberRepository());
-     }
-
-     @Bean
-    public MemberRepository memberRepository() {
-         return new JpaMemberRepository(em);
-     }
-
-//자바 코드로 의존성 주입
-//    @Bean
-//    public MemberService memberService() {
-//        return new MemberService(memberRepository());
+//    private final DataSource dataSource;
+//    private final EntityManager em;
+//
+//    public SpringConfig(DataSource dataSource, EntityManager em) {
+//        this.dataSource = dataSource;
+//        this.em= em;
 //    }
+
+    @Bean
+    public MemberService memberService() {
+        return new MemberService(memberRepository);
+    }
+
 //    @Bean
 //    public MemberRepository memberRepository() {
 //        return new MemoryMemberRepository();
+//        return new JdbcMemberRepository(dataSource);
+//        return new JdbcTemplateMemberRepository(dataSource);
+//        return new JpaMemberRepository(em);
 //    }
 }
